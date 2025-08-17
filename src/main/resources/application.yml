@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: hotel-scheduler
   datasource:
     url: jdbc:h2:mem:hotelscheduler;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
@@ -17,10 +19,32 @@ spring:
       enabled: true
       path: /h2-console
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+    propagation:
+      type: W3C,B3
+  otlp:
+    metrics:
+      export:
+        enabled: true
+        url: ${OTEL_METRICS_EXPORT_URL:http://localhost:4318/v1/metrics}
+
 logging:
   level:
     org.hibernate.SQL: INFO
     org.springframework.security: INFO
+  pattern:
+    level: "%5p [${spring.application.name:},traceId=%mdc{traceId:-},spanId=%mdc{spanId:-}]"
 
 app:
   security:
@@ -31,3 +55,12 @@ camel:
   servlet:
     mapping:
       context-path: /api/*
+  main:
+    useMDCLogging: true
+  opentelemetry:
+    enabled: true
+
+otel:
+  exporter:
+    otlp:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4317}

@@ -21,6 +21,7 @@ public class GlobalExceptionHandler extends RouteBuilder {
 			.process(exchange -> {
 				Exception e = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
 				ErrorResponse body = ErrorResponseFactory.build(e, exchange, ErrorCode.RESOURCE_NOT_FOUND);
+				body.requestId = exchange.getMessage().getHeader("X-Request-Id", String.class);
 				exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, body.status);
 				exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "application/json");
 				exchange.getMessage().setBody(body);
@@ -31,6 +32,7 @@ public class GlobalExceptionHandler extends RouteBuilder {
 			.process(exchange -> {
 				Exception e = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
 				ErrorResponse body = ErrorResponseFactory.build(e, exchange, ErrorCode.VALIDATION_ERROR);
+				body.requestId = exchange.getMessage().getHeader("X-Request-Id", String.class);
 				exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, body.status);
 				exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "application/json");
 				exchange.getMessage().setBody(body);
@@ -41,6 +43,7 @@ public class GlobalExceptionHandler extends RouteBuilder {
 			.process(exchange -> {
 				Exception e = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
 				ErrorResponse body = ErrorResponseFactory.build(e, exchange, ErrorCode.CONFLICT);
+				body.requestId = exchange.getMessage().getHeader("X-Request-Id", String.class);
 				exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, body.status);
 				exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "application/json");
 				exchange.getMessage().setBody(body);
@@ -51,17 +54,18 @@ public class GlobalExceptionHandler extends RouteBuilder {
 			.process(exchange -> {
 				Exception e = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
 				ErrorResponse body = ErrorResponseFactory.build(e, exchange, ErrorCode.TIMEOUT);
+				body.requestId = exchange.getMessage().getHeader("X-Request-Id", String.class);
 				exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, body.status);
 				exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "application/json");
 				exchange.getMessage().setBody(body);
 			});
 
-		// Fallback catch-all
 		onException(Exception.class)
 			.handled(true)
 			.process(exchange -> {
 				Exception e = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
 				ErrorResponse body = ErrorResponseFactory.build(e, exchange, ErrorCode.INTERNAL_ERROR);
+				body.requestId = exchange.getMessage().getHeader("X-Request-Id", String.class);
 				exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, body.status);
 				exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "application/json");
 				exchange.getMessage().setBody(body);

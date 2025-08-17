@@ -29,9 +29,7 @@ public class SecurityConfig {
 				.anyRequest().permitAll())
 			.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
-		// H2 console frames
 		http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
-
 		return http.build();
 	}
 

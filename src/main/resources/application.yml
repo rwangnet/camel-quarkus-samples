@@ -25,4 +25,9 @@ logging:
 app:
   security:
     jwt:
-      secret: "YXZlcnlTdHJvbmdAMTIzNDU2Nzg5MDEyMzQ1Ni0tLXN1cGVyU2VjcmV0Ig==" # base64 string for HS256
+      secret: "YXZlcnlTdHJvbmdAMTIzNDU2Nzg5MDEyMzQ1Ni0tLXN1cGVyU2VjcmV0Ig=="
+
+camel:
+  servlet:
+    mapping:
+      context-path: /api/*

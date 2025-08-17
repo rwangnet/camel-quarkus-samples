@@ -1,0 +1,15 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: ${APP_SSL_KEY_STORE:classpath:certs/server-keystore.p12}
+    key-store-password: ${APP_SSL_KEY_STORE_PASSWORD:changeit}
+    key-store-type: PKCS12
+    trust-store: ${APP_SSL_TRUST_STORE:classpath:certs/server-truststore.p12}
+    trust-store-password: ${APP_SSL_TRUST_STORE_PASSWORD:changeit}
+    trust-store-type: PKCS12
+    client-auth: need
+
+spring:
+  profiles:
+    include: mtls

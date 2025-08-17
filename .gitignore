@@ -1,0 +1,16 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.idea/
+.project
+.classpath
+.settings/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+node_modules/
+logs/
+*.log
+hs_err_pid*

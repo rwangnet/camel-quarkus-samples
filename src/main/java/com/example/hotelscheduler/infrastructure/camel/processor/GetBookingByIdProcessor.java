@@ -1,5 +1,6 @@
 package com.example.hotelscheduler.infrastructure.camel.processor;
 
+import com.example.hotelscheduler.application.exception.ResourceNotFoundException;
 import com.example.hotelscheduler.application.usecase.ScheduleBookingService;
 import com.example.hotelscheduler.domain.model.Booking;
 import org.apache.camel.Exchange;
@@ -21,15 +22,11 @@ public class GetBookingByIdProcessor implements Processor {
 		String idStr = exchange.getMessage().getHeader("id", String.class);
 		Long id = idStr != null ? Long.valueOf(idStr) : null;
 		if (id == null) {
-			exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, 400);
-			exchange.getMessage().setBody("Missing id path variable");
-			return;
+			throw new IllegalArgumentException("Missing id path variable");
 		}
 		Optional<Booking> opt = scheduleBookingService.getBooking(id);
 		if (opt.isEmpty()) {
-			exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, 404);
-			exchange.getMessage().setBody(null);
-			return;
+			throw new ResourceNotFoundException("Booking with id %d not found".formatted(id));
 		}
 		exchange.getMessage().setBody(opt.get());
 	}
